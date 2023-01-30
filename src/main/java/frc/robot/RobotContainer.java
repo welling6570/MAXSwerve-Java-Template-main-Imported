@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -38,23 +41,30 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
+    UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
+    fisheye.setResolution(160, 120);
+    fisheye.setFPS(15);
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.abs(m_driverController.getLeftY()), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getLeftX() * Math.abs(m_driverController.getLeftX()), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getRightX() * Math.abs(m_driverController.getRightX()), 0.06),
+                //MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.abs(m_driverController.getLeftY()), 0.06),
+                -m_xspeedLimiter.calculate(MathUtil.applyDeadband(m_driverController.getLeftY(), 0.02)),
+                //MathUtil.applyDeadband(-m_driverController.getLeftX() * Math.abs(m_driverController.getLeftX()), 0.06),
+                -m_yspeedLimiter.calculate(MathUtil.applyDeadband(m_driverController.getLeftX(), 0.02)),
+                //MathUtil.applyDeadband(-m_driverController.getRightX() * Math.abs(m_driverController.getRightX()), 0.06),
+                -m_rotLimiter.calculate(MathUtil.applyDeadband(m_driverController.getRightX(), 0.02)),
                 (m_driverController.getLeftBumper() ? false : true)),
             m_robotDrive));
   }

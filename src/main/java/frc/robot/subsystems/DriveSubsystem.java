@@ -110,7 +110,11 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     rot *= DriveConstants.kMaxAngularSpeed;
-
+    if(!fieldRelative){
+    xSpeed *= -DriveConstants.kMaxSpeedMetersPerSecond;
+    ySpeed *= -DriveConstants.kMaxSpeedMetersPerSecond;
+    rot *= DriveConstants.kMaxAngularSpeed;
+    }
     SmartDashboard.putNumber("gyroangle", m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative

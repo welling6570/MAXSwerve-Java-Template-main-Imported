@@ -48,15 +48,15 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
  
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 21;
-    public static final int kRearLeftDrivingCanId = 22;
-    public static final int kFrontRightDrivingCanId = 23;
-    public static final int kRearRightDrivingCanId = 24;
+    public static final int kFrontLeftDrivingCanId = 24;
+    public static final int kRearLeftDrivingCanId = 23;
+    public static final int kFrontRightDrivingCanId = 22;
+    public static final int kRearRightDrivingCanId = 21;
 
-    public static final int kFrontLeftTurningCanId = 11;
-    public static final int kRearLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 13;
-    public static final int kRearRightTurningCanId = 14;
+    public static final int kFrontLeftTurningCanId = 14;
+    public static final int kRearLeftTurningCanId = 13;
+    public static final int kFrontRightTurningCanId = 12;
+    public static final int kRearRightTurningCanId = 11;
 
     public static final boolean kGyroReversed = true;
   }
@@ -133,5 +133,17 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+  public static final class IntakeConstants {
+    public static final int kIntakeLeftMotor = 31;
+    public static final int kIntakeRightMotor = 32;
+    public static final int kForwardChannel = 0;
+    public static final int kReverseChannel = 1;
+  }
+
+  public static final class ArmConstants {
+    public static final int kFirstExtensionMotor = 31;
+    public static final int kSecondExtensionMotor = 32;
+    public static final int kAngleMotor = 32;
   }
 }

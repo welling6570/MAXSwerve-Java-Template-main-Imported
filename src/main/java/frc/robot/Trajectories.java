@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,25 +13,58 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 
 public class Trajectories {
-    private static List<Trajectory> results = new ArrayList<Trajectory>();
-    private static Trajectory midTrajectory = new Trajectory();
-
-    public static List<Trajectory> generateTrajectories(){
+        public static Trajectory midTrajectory = new Trajectory();
+        public static Trajectory shortTrajectory = new Trajectory();
+        public static Trajectory longTrajectory = new Trajectory();
+        public static Trajectory gigaMidTrajectory = new Trajectory();
+    
+public static void generateTrajectories(){
+    //Config the Trajectory goodness!
     TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
-    // Add kinematics to ensure max speed is actually obeyed
 
 
-// An example trajectory to follow. All units in meters.
-    midTrajectory = TrajectoryGenerator.generateTrajectory(
-    // Start at the origin facing the +X direction
-    new Pose2d(0, 0, new Rotation2d(3.1415)),
-    // Pass through these two interior waypoints, making an 's' curve path
-    List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
-    //emptArr[],
-    // End 3 meters straight ahead of where we started, facing forward
-    new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(0)),
-    config);
-        results.add(midTrajectory);
-    return results;
+        // Basic Park-on-the-Charger Traj
+        midTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(3.1415)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
+            //emptArr[],
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(0)),
+            config);
+
+        // Basic Park-on-the-Charger Traj
+        shortTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(3.1415)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
+            //emptArr[],
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(0)),
+            config);
+
+        // Basic Park-on-the-Charger Traj
+        longTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(3.1415)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
+            //emptArr[],
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(0)),
+            config);
+
+        // Basic Park-on-the-Charger Traj
+        gigaMidTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(3.1415)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
+            //emptArr[],
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(0)),
+            config);
     }
 }

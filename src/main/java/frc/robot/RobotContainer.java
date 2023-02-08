@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -45,6 +46,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final SwerveDriveOdometry​ m_swerveDriveOdometry = new SwerveDriveOdometry​(kDriveKinematics);
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   //private final SuppliedValueWidget statewidget = new SuppliedValueWidget(null, null, null, null, null);
   // The driver's controller
@@ -52,27 +54,12 @@ public class RobotContainer {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
-
-  private Trajectory exampleTrajectory = new Trajectory();
   
-  var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+  private SwerveControllerCommand midSwerveControllerCommand;
+  private SwerveControllerCommand shortSwerveControllerCommand;
+  private SwerveControllerCommand longSwerveControllerCommand;
+  private SwerveControllerCommand gigaMidSwerveControllerCommand;
+ 
   
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,12 +72,13 @@ public class RobotContainer {
     fisheye.setFPS(15);
     m_chooser.setDefaultOption("offtarmac", m_midengage);
     Trajectories.generateTrajectories();
+    generateSwerveCommands();
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
     m_chooser.addOption("lessofftarmac", m_long);
     m_chooser.addOption("lessofftarmac", m_shortking);
-    SmartDashboard.putNumber("example", 0);
-    // Create config for trajectory
+    private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
+    SmartDashboard.putNumber("example", robotPositionList[0]);
    
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -108,7 +96,7 @@ public class RobotContainer {
             m_robotDrive));
   }
   private final SequentialCommandGroup m_midengage = new SequentialCommandGroup(
-    
+
   );
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -134,12 +122,67 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
 
+    // Reset odometry to the starting pose of the trajectory.
+    m_robotDrive.resetOdometry(new Pose2d(0, 0, new Rotation2d(3.1415)));
+   
     
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return midSwerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
   }
 
-  
+  private void generateSwerveCommands() {
+    var thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);    
+    
+    midSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.midTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
+    shortSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.shortTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);    
+            
+    longSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.longTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
+    gigaMidSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.gigaMidTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+  }
 
 }

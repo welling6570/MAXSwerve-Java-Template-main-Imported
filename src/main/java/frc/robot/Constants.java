@@ -142,8 +142,21 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int kFirstExtensionMotor = 31;
-    public static final int kSecondExtensionMotor = 32;
-    public static final int kAngleMotor = 32;
+    public static final int kExtensionMotor = 33;
+    public static final int kAngleMotor = 34;
+
+    public static final double kExtensionP = 1;
+    public static final double kExtensionI = 0;
+    public static final double kExtensionD = 0;
+    public static final double kExtensionFF = 0;
+    public static final double kExtensionMinOutput = -1;
+    public static final double kExtensionMaxOutput = 1;
+
+    public static final double kAngleP = 1;
+    public static final double kAngleI = 0;
+    public static final double kAngleD = 0;
+    public static final double kAngleFF = 0;
+    public static final double kAngleMinOutput = -1;
+    public static final double kAngleMaxOutput = 1;
   }
 }

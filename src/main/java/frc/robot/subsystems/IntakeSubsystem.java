@@ -18,8 +18,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     
     public void jeremyRennerVibeCheck(double out, double in){
-        intakeLeft.set((in - out)); 
-        intakeRight.set(-(in - out));
+        intakeLeft.set((in - out)*.1); 
+        intakeRight.set(-(in - out)*.1);
     }
     
     public void donstretch() {

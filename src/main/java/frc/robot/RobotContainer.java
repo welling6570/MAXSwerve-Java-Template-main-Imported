@@ -46,7 +46,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final SwerveDriveOdometry​ m_swerveDriveOdometry = new SwerveDriveOdometry​(kDriveKinematics);
+  //private final SwerveDriveOdometry​ m_swerveDriveOdometry = new SwerveDriveOdometry​(kDriveKinematics);
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   //private final SuppliedValueWidget statewidget = new SuppliedValueWidget(null, null, null, null, null);
   // The driver's controller
@@ -77,8 +77,8 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add(m_chooser);
     m_chooser.addOption("lessofftarmac", m_long);
     m_chooser.addOption("lessofftarmac", m_shortking);
-    private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
-    SmartDashboard.putNumber("example", robotPositionList[0]);
+    //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
+    //SmartDashboard.putNumber("example", robotPositionList[0]);
    
     // Configure default commands
     m_robotDrive.setDefaultCommand(

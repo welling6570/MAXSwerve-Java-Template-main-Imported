@@ -114,6 +114,8 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kArmControllerPort = 1;
+
   }
 
   public static final class AutoConstants {
@@ -148,6 +150,7 @@ public final class Constants {
     public static final double kExtensionP = 1;
     public static final double kExtensionI = 0;
     public static final double kExtensionD = 0;
+    public static final double kExtensionIz = 0;
     public static final double kExtensionFF = 0;
     public static final double kExtensionMinOutput = -1;
     public static final double kExtensionMaxOutput = 1;
@@ -155,6 +158,7 @@ public final class Constants {
     public static final double kAngleP = 1;
     public static final double kAngleI = 0;
     public static final double kAngleD = 0;
+    public static final double kAngleIz = 0;
     public static final double kAngleFF = 0;
     public static final double kAngleMinOutput = -1;
     public static final double kAngleMaxOutput = 1;

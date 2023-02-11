@@ -4,50 +4,70 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ArmConstants;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class ArmSubsystem extends SubsystemBase {
-    public final CANSparkMax extensionMotor = new CANSparkMax(ArmConstants.kExtensionMotor, MotorType.kBrushed);
-    public final CANSparkMax angleMotor  = new CANSparkMax(ArmConstants.kAngleMotor, MotorType.kBrushed);
-    public SparkMaxPIDController m_ExtensionPidController;
-    public double kExtensionP, kExtensionI, kExtensionD, kExtensionIz, kExtensionFF, kExtensionMaxOutput, kExtensionMinOutput;
-   
-    public SparkMaxPIDController m_AnglePidController;
-    public double kAngleP, kAngleI, kAngleD, kAngleIz, kAngleFF, kAngleMaxOutput, kAngleMinOutput;
+    private CANSparkMax extensionMotor = new CANSparkMax(ArmConstants.kExtensionMotor, MotorType.kBrushed);
+    private CANSparkMax rightAngleMotor  = new CANSparkMax(ArmConstants.kAngleMotor, MotorType.kBrushed);
+    private CANSparkMax leftAngleMotor  = new CANSparkMax(ArmConstants.kAngleMotor, MotorType.kBrushed);
+    private SparkMaxPIDController m_extensionPidController;
+    public SparkMaxPIDController m_rightAnglePidController;
+    public SparkMaxPIDController m_leftAnglePidController;
+    
+    private SparkMaxAlternateEncoder m_extensionEncoder;
+    private SparkMaxAlternateEncoder m_rightAngleEncoder;
+    private SparkMaxAlternateEncoder m_leftAngleEncoder;
 
-    public SparkMaxAlternateEncoder m_extensionEncoder;
-    public SparkMaxAlternateEncoder m_angleEncoder;
+public ArmSubsystem() {
 
-    m_extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-    m_angleEncoder = angleMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+    m_extensionEncoder = new SparkMaxAlternateEncoder(extensionMotor,4096);
+    m_leftAngleEncoder = leftAngleMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+    m_rightAngleEncoder = rightAngleMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
 
     m_extensionPidController = extensionMotor.getPIDController();
-    m_anglePidController = angleMotor.getPIDController();
+    m_leftAnglePidController = leftAngleMotor.getPIDController();
+    m_rightAnglePidController = rightAngleMotor.getPIDController();
 
     m_extensionPidController.setFeedbackDevice(m_extensionEncoder);
-    m_anglePidController.setFeedbackDevice(m_angleEncoder);
+    m_leftAnglePidController.setFeedbackDevice(m_leftAngleEncoder);
+    m_rightAnglePidController.setFeedbackDevice(m_rightAngleEncoder);
 
     // set PID coefficients
     //m_extensionPidController.setP(kExtensionP);
-    m_extensionPidController.setI(kExtensionI);
-    m_extensionPidController.setD(kExtensionD);
-    m_extensionPidController.setIZone(kExtensionIz);
-    m_extensionPidController.setFF(kExtensionFF);
-    m_extensionPidController.setOutputRange(kExtensionMinOutput, kExtensionMaxOutput);
+    m_extensionPidController.setI(ArmConstants.kExtensionI);
+    m_extensionPidController.setD(ArmConstants.kExtensionD);
+    m_extensionPidController.setIZone(ArmConstants.kExtensionIz);
+    m_extensionPidController.setFF(ArmConstants.kExtensionFF);
+    m_extensionPidController.setOutputRange(ArmConstants.kExtensionMinOutput, ArmConstants.kExtensionMaxOutput);
 
-    m_anglePidController.setP(kAngleP);
-    m_anglePidController.setI(kAngleI);
-    m_anglePidController.setD(kAngleD);
-    m_anglePidController.setIZone(kAngleIz);
-    m_anglePidController.setFF(kAngleFF);
-    m_anglePidController.setOutputRange(kAngleMinOutput, kAngleMaxOutput);
+    m_leftAnglePidController.setP(ArmConstants.kAngleP);
+    m_leftAnglePidController.setI(ArmConstants.kAngleI);
+    m_leftAnglePidController.setD(ArmConstants.kAngleD);
+    m_leftAnglePidController.setIZone(ArmConstants.kAngleIz);
+    m_leftAnglePidController.setFF(ArmConstants.kAngleFF);
+    m_leftAnglePidController.setOutputRange(ArmConstants.kAngleMinOutput, ArmConstants.kAngleMaxOutput);
 
-    
-}}
+    m_rightAnglePidController.setP(ArmConstants.kAngleP);
+    m_rightAnglePidController.setI(ArmConstants.kAngleI);
+    m_rightAnglePidController.setD(ArmConstants.kAngleD);
+    m_rightAnglePidController.setIZone(ArmConstants.kAngleIz);
+    m_rightAnglePidController.setFF(ArmConstants.kAngleFF);
+    m_rightAnglePidController.setOutputRange(ArmConstants.kAngleMinOutput, ArmConstants.kAngleMaxOutput);
+
+}
+    public void extendopatronum(double reach) {
+        m_extensionPidController.setReference(reach,  CANSparkMax.ControlType.kPosition);
+
+
+    }
+
+    public void wingardiumleviosa(double reach) {
+        m_rightAnglePidController.setReference(reach,  CANSparkMax.ControlType.kPosition);
+        m_leftAnglePidController.setReference(reach,  CANSparkMax.ControlType.kPosition);
+        
+
+    }
+}

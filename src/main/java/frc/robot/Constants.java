@@ -146,6 +146,13 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int kExtensionMotor = 33;
     public static final int kAngleMotor = 34;
+    public static final int kPIDLoopIdx = 0;
+
+	/**
+	 * Set to zero to skip waiting for confirmation, set to nonzero to wait and
+	 * report to DS if action fails.
+	 */
+	public static final int kTimeoutMs = 30;
 
     public static final double kExtensionP = 1;
     public static final double kExtensionI = 0;

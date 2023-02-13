@@ -12,18 +12,11 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -35,8 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Trajectories;
-import java.lang.reflect.Array;
-import java.util.List;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -55,7 +47,7 @@ public class RobotContainer {
   //private final SuppliedValueWidget statewidget = new SuppliedValueWidget(null, null, null, null, null);
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController XBDrive = new XboxController(OIConstants.kArmControllerPort);
+  XboxController XBShooter = new XboxController(OIConstants.kArmControllerPort);
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
@@ -76,16 +68,18 @@ public class RobotContainer {
     UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
     fisheye.setResolution(160, 120);
     fisheye.setFPS(15);
-    m_chooser.setDefaultOption("offtarmac", m_midengage);
+    m_chooser.setDefaultOption("mid auto", m_midengage);
     Trajectories.generateTrajectories();
     generateSwerveCommands();
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
-    m_chooser.addOption("lessofftarmac", m_long);
-    m_chooser.addOption("lessofftarmac", m_shortking);
+    //m_chooser.addOption("long auto", m_long);
+    //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
     //SmartDashboard.putNumber("example", robotPositionList[0]);
-   
+    SmartDashboard.putNumber("angle reach", 0);
+    SmartDashboard.putNumber("extension reach", 0);
+
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -115,14 +109,14 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(XBDrive, Button.kA.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(0)));
-    new JoystickButton(XBDrive, Button.kB.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(1)));
-    new JoystickButton(XBDrive, Button.kX.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(0)));
-    new JoystickButton(XBDrive, Button.kY.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(1)));
+    new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(0)));
+    new JoystickButton(XBShooter, Button.kB.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(1)));
+    new JoystickButton(XBShooter, Button.kX.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(0)));
+    new JoystickButton(XBShooter, Button.kY.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(1)));
   }
 
   /**

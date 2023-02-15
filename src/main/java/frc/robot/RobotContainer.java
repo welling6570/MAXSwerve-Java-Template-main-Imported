@@ -42,6 +42,9 @@ public class RobotContainer {
 
   private final ArmSubsystem m_arm = new ArmSubsystem();
 
+    private final SmartDashboard m_Dashboard;
+    private final Shuffleboard m_Shuffleboard;
+
   //private final SwerveDriveOdometry​ m_swerveDriveOdometry = new SwerveDriveOdometry​(kDriveKinematics);
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   //private final SuppliedValueWidget statewidget = new SuppliedValueWidget(null, null, null, null, null);
@@ -72,11 +75,11 @@ public class RobotContainer {
     Trajectories.generateTrajectories();
     generateSwerveCommands();
     // Put the chooser on the dashboard
-    Shuffleboard.getTab("Autonomous").add(m_chooser);
+    m_Shuffleboard.getTab("Autonomous").add(m_chooser);
     //m_chooser.addOption("long auto", m_long);
     //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
-    //SmartDashboard.putNumber("example", robotPositionList[0]);
+    
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(

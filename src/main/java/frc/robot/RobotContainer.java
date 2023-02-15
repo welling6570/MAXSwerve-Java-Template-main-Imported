@@ -77,8 +77,6 @@ public class RobotContainer {
     //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
     //SmartDashboard.putNumber("example", robotPositionList[0]);
-    SmartDashboard.putNumber("angle reach", 0);
-    SmartDashboard.putNumber("extension reach", 0);
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -94,6 +92,10 @@ public class RobotContainer {
                 -m_rotLimiter.calculate(MathUtil.applyDeadband(m_driverController.getRightX()* Math.abs(m_driverController.getRightX()), 0.02)),
                 (m_driverController.getLeftBumper() ? false : true)),
             m_robotDrive));
+    m_arm.setDefaultCommand(
+        new RunCommand(
+        () -> m_arm.Angxtend(0, 0), m_arm
+    ));
   }
 
   private final SequentialCommandGroup m_midengage = new SequentialCommandGroup(
@@ -113,10 +115,10 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(0)));
-    new JoystickButton(XBShooter, Button.kB.value).onTrue( new RunCommand(() -> m_arm.wingardiumleviosa(1)));
-    new JoystickButton(XBShooter, Button.kX.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(0)));
-    new JoystickButton(XBShooter, Button.kY.value).onTrue( new RunCommand(() -> m_arm.extendopatronum(1)));
+    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,0)));
+    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,10000)));
+    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,-10000)));
+    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(2,0)));
   }
 
   /**
@@ -125,7 +127,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
+     
 
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(new Pose2d(0, 0, new Rotation2d(3.1415)));

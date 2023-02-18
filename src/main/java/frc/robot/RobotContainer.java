@@ -22,13 +22,14 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Trajectories;
-
+import frc.robot.subsystems.IntakeSubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -41,9 +42,9 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   private final ArmSubsystem m_arm = new ArmSubsystem();
-
-    private final SmartDashboard m_Dashboard;
-    private final Shuffleboard m_Shuffleboard;
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
+    //private final SmartDashboard m_Dashboard;
+    //private final Shuffleboard m_Shuffleboard;
 
   //private final SwerveDriveOdometry​ m_swerveDriveOdometry = new SwerveDriveOdometry​(kDriveKinematics);
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -75,7 +76,7 @@ public class RobotContainer {
     Trajectories.generateTrajectories();
     generateSwerveCommands();
     // Put the chooser on the dashboard
-    m_Shuffleboard.getTab("Autonomous").add(m_chooser);
+    //m_Shuffleboard.getTab("Autonomous").add(m_chooser);
     //m_chooser.addOption("long auto", m_long);
     //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
@@ -95,9 +96,13 @@ public class RobotContainer {
                 -m_rotLimiter.calculate(MathUtil.applyDeadband(m_driverController.getRightX()* Math.abs(m_driverController.getRightX()), 0.02)),
                 (m_driverController.getLeftBumper() ? false : true)),
             m_robotDrive));
+    m_intake.setDefaultCommand(
+       new RunCommand(
+        () -> m_intake.jeremyRennerVibeCheck(XBShooter.getLeftTriggerAxis(), XBShooter.getRightTriggerAxis()), m_intake
+    ));
     m_arm.setDefaultCommand(
-        new RunCommand(
-        () -> m_arm.Angxtend(0, 0), m_arm
+       new RunCommand(
+        () -> m_arm.getPositions(), m_arm
     ));
   }
 
@@ -118,13 +123,20 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,0)));
-    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,10000)));
-    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(0,-10000)));
-    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(2,0)));
-  }
+    // new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    // new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(60, -10000)));
+    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(60,-130000)));
+    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
+    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
+    new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
+    new JoystickButton(XBShooter, Button.kStart.value).whileTrue(new RunCommand(() -> m_arm.Angxtend(50,0)));
+}
 
-  /**
+  /** n
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous

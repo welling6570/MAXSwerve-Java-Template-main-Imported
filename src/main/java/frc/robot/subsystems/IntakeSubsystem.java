@@ -12,8 +12,8 @@ import frc.robot.Constants.IntakeConstants;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final CANSparkMax intakeLeft = new CANSparkMax(IntakeConstants.kIntakeLeftMotor, MotorType.kBrushed);
-    private final CANSparkMax intakeRight  = new CANSparkMax(IntakeConstants.kIntakeRightMotor, MotorType.kBrushed);
+    private final CANSparkMax intakeLeft = new CANSparkMax(IntakeConstants.kIntakeLeftMotor, MotorType.kBrushless);
+    private final CANSparkMax intakeRight  = new CANSparkMax(IntakeConstants.kIntakeRightMotor, MotorType.kBrushless);
     private final DoubleSolenoid grabblerDoubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.kForwardChannel, IntakeConstants.kReverseChannel);
 
     
@@ -22,10 +22,10 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeRight.set(-(in - out)*.1);
     }
     
-    public void donstretch() {
+    public void jeremyRennerHug() {
         grabblerDoubleSolenoid.set(kForward);
     }
-    public void donfold() {
+    public void jeremyRennerRelease() {
         grabblerDoubleSolenoid.set(kReverse);
     }
 }

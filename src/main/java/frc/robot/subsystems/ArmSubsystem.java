@@ -67,10 +67,11 @@ public ArmSubsystem() {
     extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, 50);
     m_extensionEncoder.setPosition(50);
     m_extensionEncoder.setInverted(true);
+    
     m_extensionPidController = extensionMotor.getPIDController();    
 
     m_extensionPidController.setFeedbackDevice(m_extensionEncoder);   
-
+    //m_extensionPidController.
     // set PID coefficients
     m_extensionPidController.setP(ArmConstants.kExtensionP);
     m_extensionPidController.setI(ArmConstants.kExtensionI);
@@ -101,23 +102,24 @@ public ArmSubsystem() {
     public void getPositions() {
         SmartDashboard.putNumber("Extension", m_extensionEncoder.getPosition());
         SmartDashboard.putNumber("Angle", JeremyRenner.getSelectedSensorPosition());
+        if (JeremyRenner.getSelectedSensorPosition()<=0) {
+            extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        } 
+        if (m_extensionEncoder.getPosition()>1) {
+            JeremyRenner.configForwardSoftLimitThreshold(5000);
+        } else {
+            JeremyRenner.configForwardSoftLimitThreshold(10000);
+         }
     }
+
 
     public void Angxtend(double reach, double lift){  
         SmartDashboard.putNumber("Angle: ", JeremyRenner.getSelectedSensorPosition());
-        // if (JeremyRenner.getSelectedSensorPosition()<0) {
-        //     extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        // } else {
-        //     extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, -2);
-        // }
-        // if (m_extensionEncoder.getPosition()>1) {
-        //     JeremyRenner.configForwardSoftLimitThreshold(5000);
-        // } else {
-        //     JeremyRenner.configForwardSoftLimitThreshold(10000);
-        //  }
-        //This line uses "motion magic" to try to reduce wobble.
         JeremyRenner.set(TalonFXControlMode.MotionMagic, lift);
         m_extensionPidController.setReference(reach,  CANSparkMax.ControlType.kPosition);
-            }
-
     }
+
+    public void AlterLift(){  
+        JeremyRenner.set(TalonFXControlMode.MotionMagic, (JeremyRenner.getSelectedSensorPosition()-20000 ));
+    }
+}

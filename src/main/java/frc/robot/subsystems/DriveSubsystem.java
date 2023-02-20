@@ -105,15 +105,20 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean slow) {
     // Adjust input based on max speed
-    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    rot *= DriveConstants.kMaxAngularSpeed;
+    // xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    // ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    // rot *= DriveConstants.kMaxAngularSpeed;
     if(!fieldRelative){
-    xSpeed *= -DriveConstants.kMaxSpeedMetersPerSecond;
-    ySpeed *= -DriveConstants.kMaxSpeedMetersPerSecond;
-    rot *= DriveConstants.kMaxAngularSpeed;
+    xSpeed *= -1;
+    ySpeed *= -1;
+    rot *= 1;
+    }
+    if(!slow) {
+      xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+      ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+      rot *= DriveConstants.kMaxAngularSpeed;
     }
     SmartDashboard.putNumber("gyroangle", m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(

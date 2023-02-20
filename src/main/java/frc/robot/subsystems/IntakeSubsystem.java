@@ -23,9 +23,9 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     
     public void jeremyRennerHug() {
-        grabblerDoubleSolenoid.set(kForward);
+        grabblerDoubleSolenoid.set(kReverse);
     }
     public void jeremyRennerRelease() {
-        grabblerDoubleSolenoid.set(kReverse);
+        grabblerDoubleSolenoid.set(kForward);
     }
 }

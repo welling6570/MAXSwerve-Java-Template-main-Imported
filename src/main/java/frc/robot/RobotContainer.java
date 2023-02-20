@@ -89,12 +89,13 @@ public class RobotContainer {
         new RunCommand(
             () -> m_robotDrive.drive(
                 //MathUtil.applyDeadband(-m_driverController.getLeftY() * Math.abs(m_driverController.getLeftY()), 0.06),
-                -m_xspeedLimiter.calculate(MathUtil.applyDeadband(m_driverController.getLeftY() * Math.abs(m_driverController.getLeftY()),0.02)),
+                -m_xspeedLimiter.calculate(MathUtil.applyDeadband(Math.pow(m_driverController.getLeftY(),3),0.02)),
                 //MathUtil.applyDeadband(-m_driverController.getLeftX() * Math.abs(m_driverController.getLeftX()), 0.06),
-                -m_yspeedLimiter.calculate(MathUtil.applyDeadband(m_driverController.getLeftX() * Math.abs(m_driverController.getLeftX()), 0.02)),
+                -m_yspeedLimiter.calculate(MathUtil.applyDeadband(Math.pow(m_driverController.getLeftX(), 3) , 0.02)),
                 //MathUtil.applyDeadband(-m_driverController.getRightX() * Math.abs(m_driverController.getRightX()), 0.06),
-                -m_rotLimiter.calculate(MathUtil.applyDeadband(m_driverController.getRightX()* Math.abs(m_driverController.getRightX()), 0.02)),
-                (m_driverController.getLeftBumper() ? false : true)),
+                -m_rotLimiter.calculate(MathUtil.applyDeadband(Math.pow(m_driverController.getRightX(),3), 0.02)),
+                (m_driverController.getLeftBumper() ? false : true),
+                (m_driverController.getRightBumper())),
             m_robotDrive));
     m_intake.setDefaultCommand(
        new RunCommand(
@@ -119,21 +120,21 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
+    new JoystickButton(m_driverController, Button.kX.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
     // new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(50,0)));
     // new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(60, -10000)));
+    new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(62, -10000)));
     new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(60,-130000)));
+    new JoystickButton(XBShooter, Button.kX.value).onTrue( new RunCommand(() -> m_arm.Angxtend(78,-130000)));
     new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
-    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
-    new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
-    new JoystickButton(XBShooter, Button.kStart.value).whileTrue(new RunCommand(() -> m_arm.Angxtend(50,0)));
+    // new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
+    // new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kRightBumper.value).onTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
+    new JoystickButton(XBShooter, Button.kLeftBumper.value).onTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
+    new JoystickButton(XBShooter, Button.kLeftStick.value).onTrue(new RunCommand(() -> m_arm.AlterLift()));
 }
 
   /** n
@@ -150,7 +151,7 @@ public class RobotContainer {
     
 
     // Run path following command, then stop at the end.
-    return midSwerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return midSwerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
   }
 
   private void generateSwerveCommands() {

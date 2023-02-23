@@ -47,8 +47,8 @@ public ArmSubsystem() {
     //m_alternateEncoder = extensionMotor.getAlternateEncoder(kAltEncType, kCPR); 
     JeremyRenner.configForwardSoftLimitEnable(true);
     JeremyRenner.configReverseSoftLimitEnable(true);
-    JeremyRenner.configForwardSoftLimitThreshold(20000);
-    JeremyRenner.configReverseSoftLimitThreshold(-165000);
+    JeremyRenner.configForwardSoftLimitThreshold(-1000);
+    JeremyRenner.configReverseSoftLimitThreshold(-185000);
     JeremyRenner.configPeakOutputForward(0.4);
     JeremyRenner.configPeakOutputReverse(-0.4);
     JeremyRenner.config_kP(0, 1.0);
@@ -63,7 +63,7 @@ public ArmSubsystem() {
     m_extensionEncoder.setPositionConversionFactor(2.35);
     extensionMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     extensionMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 75);
+    extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 81);
     extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, 50);
     m_extensionEncoder.setPosition(50);
     m_extensionEncoder.setInverted(true);
@@ -102,13 +102,15 @@ public ArmSubsystem() {
     public void getPositions() {
         SmartDashboard.putNumber("Extension", m_extensionEncoder.getPosition());
         SmartDashboard.putNumber("Angle", JeremyRenner.getSelectedSensorPosition());
-        if (JeremyRenner.getSelectedSensorPosition()<=0) {
-            extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        } 
-        if (m_extensionEncoder.getPosition()>1) {
-            JeremyRenner.configForwardSoftLimitThreshold(5000);
+        if (JeremyRenner.getSelectedSensorPosition()>-40000) {
+            extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 50);
         } else {
-            JeremyRenner.configForwardSoftLimitThreshold(10000);
+            extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 81);
+        }
+        if (m_extensionEncoder.getPosition()>51) {
+            JeremyRenner.configForwardSoftLimitThreshold(-60000);
+        } else {
+            JeremyRenner.configForwardSoftLimitThreshold(-1000);
          }
     }
 
@@ -120,6 +122,6 @@ public ArmSubsystem() {
     }
 
     public void AlterLift(){  
-        JeremyRenner.set(TalonFXControlMode.MotionMagic, (JeremyRenner.getSelectedSensorPosition()-20000 ));
+        JeremyRenner.set(TalonFXControlMode.MotionMagic, (JeremyRenner.getSelectedSensorPosition()-5000 ));
     }
 }

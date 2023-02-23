@@ -152,7 +152,7 @@ public final class Constants {
 	 * Set to zero to skip waiting for confirmation, set to nonzero to wait and
 	 * report to DS if action fails.
 	 */
-	public static final int kTimeoutMs = 30;
+	  public static final int kTimeoutMs = 30;
 
     public static final double kExtensionP = 1;
     public static final double kExtensionI = 0;
@@ -169,5 +169,27 @@ public final class Constants {
     public static final double kAngleFF = 0;
     public static final double kAngleMinOutput = -1;
     public static final double kAngleMaxOutput = 1;
+
+    public static final int stowReach = 50;
+    public static final int stowLift = 0;
+    public static final int lowReach = 50;
+    public static final int lowLift = 25;
+    public static final int midReach = 50;
+    public static final int midLift = 60;
+    public static final int highReach = 50;
+    public static final int highLift = 30;
+    public static final int shelfReach = 50;
+    public static final int shelfift = 90;
+    public static final int shelfupReach = 50;
+    public static final int shelfupift = 40;
+
+    public static final int JeremyRennerforwardThreshold = 20000;
+    public static final int JeremyRennerreverseThreshold = -165000;
+    public static final int extensionMotorforwardThreshhold = 75;
+    public static final int extensionMotorreverseThreshhold = 50;
+    public static final int extensioncontrolLoopforwardThreshold = 50;
+    public static final int JermeyRennercontrolLoopforwardThreshold = 50;
+
+
   }
 }

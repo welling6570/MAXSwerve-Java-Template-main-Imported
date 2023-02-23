@@ -126,15 +126,19 @@ public class RobotContainer {
             m_robotDrive));
     // new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(50,0)));
     // new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(62, -10000)));
-    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kX.value).onTrue( new RunCommand(() -> m_arm.Angxtend(78,-130000)));
-    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(58, -50000)));
+    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
+    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(68.5,-176000)));
+    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
+    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(81,-185000)));
+    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
+    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(58,-179000)));
+    new JoystickButton(XBShooter, Button.kB.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
     // new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
     // new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kRightBumper.value).onTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
-    new JoystickButton(XBShooter, Button.kLeftBumper.value).onTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
-    new JoystickButton(XBShooter, Button.kLeftStick.value).onTrue(new RunCommand(() -> m_arm.AlterLift()));
+    new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
+    new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
+    new JoystickButton(XBShooter, Button.kLeftStick.value).whileTrue(new RunCommand(() -> m_arm.AlterLift()));
 }
 
   /** n

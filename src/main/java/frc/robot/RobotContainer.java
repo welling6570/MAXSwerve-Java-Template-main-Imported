@@ -132,9 +132,9 @@ public class RobotContainer {
     new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
     new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-62,-180000)));
     new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
-    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-111,-195000)));
+    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-111,-190000)));
     new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
-    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-20,-180000)));
+    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-20,-179000)));
     new JoystickButton(XBShooter, Button.kB.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
     // new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
     // new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));

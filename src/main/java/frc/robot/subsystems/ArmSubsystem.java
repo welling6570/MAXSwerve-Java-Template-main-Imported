@@ -51,7 +51,7 @@ public ArmSubsystem() {
     JeremyRenner.configForwardSoftLimitEnable(true);
     JeremyRenner.configReverseSoftLimitEnable(true);
     JeremyRenner.configForwardSoftLimitThreshold(-1000);
-    JeremyRenner.configReverseSoftLimitThreshold(-198000);
+    JeremyRenner.configReverseSoftLimitThreshold(-192000);
     JeremyRenner.configPeakOutputForward(0.4);
     JeremyRenner.configPeakOutputReverse(-0.4);
     JeremyRenner.config_kP(0, 1.0);

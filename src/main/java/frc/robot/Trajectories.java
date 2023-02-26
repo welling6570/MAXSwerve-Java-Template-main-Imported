@@ -31,7 +31,7 @@ public static void generateTrajectories(){
             List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
             //emptArr[],
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(Units.inchesToMeters(-105), 0, new Rotation2d(Math.toRadians(0))),
+            new Pose2d(Units.inchesToMeters(-111), 0, new Rotation2d(Math.toRadians(0))),
             config);
 
         // Basic Park-on-the-Charger Traj
@@ -42,7 +42,7 @@ public static void generateTrajectories(){
             List.of(new Translation2d(-.8, 0.1), new Translation2d(-1.6, -0.1)),
             //emptArr[],
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(Units.inchesToMeters(-190), 0, new Rotation2d(0)),
+            new Pose2d(Units.inchesToMeters(-190), 0, new Rotation2d(Math.toRadians(180))),
             config);
 
         // Basic Park-on-the-Charger Traj

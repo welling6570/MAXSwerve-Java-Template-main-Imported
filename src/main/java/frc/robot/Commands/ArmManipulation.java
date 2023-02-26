@@ -14,18 +14,18 @@ public class ArmManipulation extends CommandBase {
   @Override
   public void initialize() {
     m_armSubsystem.Angxtend(50, -176000);
-    if (m_armSubsystem.getLift()>=-174000){
-      m_armSubsystem.Angxtend(68.5, -176000);
-    }
+   // if (m_armSubsystem.getLift()>=-174000){
+  //    m_armSubsystem.Angxtend(68.5, -176000);
+    //}
   }
 
   @Override
   public boolean isFinished() {
-    if (m_armSubsystem.getReach()>=68 && m_armSubsystem.getLift()>=-174000){
-      return true;
-    } else {
+   // if (m_armSubsystem.getReach()>=68 && m_armSubsystem.getLift()>=-174000){
+   //   return true;
+   // } else {
       return false;
-    }
+  //  }
   }
 }
 

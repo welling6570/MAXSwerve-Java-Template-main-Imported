@@ -24,6 +24,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -78,8 +79,25 @@ public class RobotContainer {
     Trajectories.generateTrajectories();
     generateSwerveCommands();
     // Put the chooser on the dashboard
-    //m_Shuffleboard.getTab("Autonomous").add(m_chooser);
-    //m_chooser.addOption("long auto", m_long);
+    Shuffleboard.getTab("Autonomous").add(m_chooser);
+    m_chooser.addOption("mid", 
+    new RunCommand(() -> m_arm.Angxtend(0,-190000)).until(m_arm::getLift) 
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-111,-190000)).until(m_arm::getReach))
+    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(0.5)
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-10,-190000)).until(m_arm::reachReturned))
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-1,-1000))
+      .alongWith(midSwerveControllerCommand
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))))
+    );
+    m_chooser.addOption("sides", 
+    new RunCommand(() -> m_arm.Angxtend(0,-190000)).until(m_arm::getLift) 
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-111,-190000)).until(m_arm::getReach))
+    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(0.5)
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-10,-190000)).until(m_arm::reachReturned))
+    .andThen(new RunCommand(() -> m_arm.Angxtend(-1,-1000))
+      .alongWith(shortSwerveControllerCommand
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))))
+    );
     //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
     
@@ -154,9 +172,16 @@ public class RobotContainer {
     m_robotDrive.resetOdometry(new Pose2d(0, 0, new Rotation2d(3.1415)));
    
     // Run path following command, then stop at the end.
-    //return new RunCommand(() -> m_arm.Angxtend(68.5,-176000)).until(m_arm.getLift()>=-88000);
-    return midSwerveControllerCommand.andThen(
-       () -> m_robotDrive.drive(0, 0, 0, false, false));
+    // return new RunCommand(() -> m_arm.Angxtend(0,-190000)).until(m_arm::getLift) 
+    //     .andThen(new RunCommand(() -> m_arm.Angxtend(-111,-190000)).until(m_arm::getReach))
+    //     .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(0.5)
+    //     .andThen(new RunCommand(() -> m_arm.Angxtend(-10,-190000)).until(m_arm::reachReturned))
+    //     .andThen(new RunCommand(() -> m_arm.Angxtend(-1,-1000))
+    //       .alongWith(midSwerveControllerCommand
+    //     .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))));
+    return m_chooser.getSelected();
+    //midSwerveControllerCommand.andThen(
+       //() -> m_robotDrive.drive(0, 0, 0, false, false));
   }
 
   private void generateSwerveCommands() {

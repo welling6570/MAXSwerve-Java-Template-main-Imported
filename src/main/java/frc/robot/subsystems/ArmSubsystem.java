@@ -126,11 +126,23 @@ public ArmSubsystem() {
         JeremyRenner.set(TalonFXControlMode.MotionMagic, (JeremyRenner.getSelectedSensorPosition()-5000 ));
     }
 
-    public double getReach(){
-        return m_extensionEncoder.getPosition();
+    public boolean getReach(){
+        if (m_extensionEncoder.getPosition()<=-107) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
-    public double getLift(){
-        return JeremyRenner.getSelectedSensorPosition();
+    public boolean reachReturned(){
+        if (m_extensionEncoder.getPosition()>=-50) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean getLift(){
+        if (JeremyRenner.getSelectedSensorPosition()<=-120000) {
+            return true; } else {return false;}
+        
     }
 }

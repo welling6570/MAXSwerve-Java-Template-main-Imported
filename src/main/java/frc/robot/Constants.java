@@ -154,13 +154,13 @@ public final class Constants {
 	 */
 	  public static final int kTimeoutMs = 30;
 
-    public static final double kExtensionP = 1;
+    public static final double kExtensionP = 0.05;
     public static final double kExtensionI = 0;
     public static final double kExtensionD = 0;
     public static final double kExtensionIz = 0;
     public static final double kExtensionFF = 0;
-    public static final double kExtensionMinOutput = -1;
-    public static final double kExtensionMaxOutput = 1;
+    public static final double kExtensionMinOutput = -0.3;
+    public static final double kExtensionMaxOutput = 0.3;
 
     public static final double kAngleP = 1;
     public static final double kAngleI = 0;

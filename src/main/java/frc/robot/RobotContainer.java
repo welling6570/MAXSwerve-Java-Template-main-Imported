@@ -29,7 +29,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Trajectories;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.Commands.ArmManipulation;
+import frc.robot.Commands.IntakeManipulation;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -126,18 +128,18 @@ public class RobotContainer {
             m_robotDrive));
     // new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(50,0)));
     // new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(58, -50000)));
-    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
-    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(68.5,-176000)));
-    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
-    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(81,-185000)));
-    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
-    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(58,-179000)));
-    new JoystickButton(XBShooter, Button.kB.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50.5,-1000)));
+    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-32, -48000)));
+    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
+    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-62,-180000)));
+    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
+    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-111,-195000)));
+    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
+    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-20,-180000)));
+    new JoystickButton(XBShooter, Button.kB.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
     // new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
     // new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
-    new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
+    new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
+    new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
     new JoystickButton(XBShooter, Button.kLeftStick.value).whileTrue(new RunCommand(() -> m_arm.AlterLift()));
 }
 
@@ -147,15 +149,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-     
 
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(new Pose2d(0, 0, new Rotation2d(3.1415)));
    
-    
-
     // Run path following command, then stop at the end.
-    return midSwerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    //return new RunCommand(() -> m_arm.Angxtend(68.5,-176000)).until(m_arm.getLift()>=-88000);
+    return midSwerveControllerCommand.andThen(
+       () -> m_robotDrive.drive(0, 0, 0, false, false));
   }
 
   private void generateSwerveCommands() {

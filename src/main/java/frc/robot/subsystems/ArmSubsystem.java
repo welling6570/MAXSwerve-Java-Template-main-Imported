@@ -61,9 +61,12 @@ public ArmSubsystem() {
     //This here sets a motion profile so that our arm wobbles less.
    
    
-    JeremyRenner.configMotionAcceleration(40000);
+    JeremyRenner.configMotionAcceleration(5000);
     //changed sensorUnitsPer100msPerSec from 30000 to 40000 after match 31
+    // changed from 40000 to 20000 and then down to 5000 3/7/23
     JeremyRenner.configMotionCruiseVelocity(60000);
+    JeremyRenner.configMotionSCurveStrength(0);
+    //JeremyRenner.configMotion
 
        
     m_extensionEncoder = extensionSparkMax.getEncoder();
@@ -74,6 +77,7 @@ public ArmSubsystem() {
     extensionSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, true);
     extensionSparkMax.setSoftLimit(SoftLimitDirection.kForward, ArmConstants.extensionMotorforwardThreshhold);
     extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.extensionMotorreverseThreshhold);
+    extensionSparkMax.setSmartCurrentLimit(40, 20);
     //m_extensionEncoder.setPosition(50);
     //m_extensionEncoder.setInverted(true);
     
@@ -147,5 +151,10 @@ public ArmSubsystem() {
         if (JeremyRenner.getSelectedSensorPosition() <= ArmConstants.getLiftCondition) {
             return true; } else {return false;}
         //changed getSelectedSensorPostition from <=-120000 to -130000 after match 31
+    }
+
+    public boolean getLift2(){
+        if (JeremyRenner.getSelectedSensorPosition() <= -1000) {
+            return true; } else {return false;}
     }
 }

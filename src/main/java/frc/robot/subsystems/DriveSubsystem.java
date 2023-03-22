@@ -105,22 +105,23 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean slow) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, double slow) {
     // Adjust input based on max speed
-    // xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    // ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    // rot *= DriveConstants.kMaxAngularSpeed;
+    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond*(1-(slow*0.8));
+    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond*(1-(slow*0.8));
+    rot *= DriveConstants.kMaxAngularSpeed*(1-(slow*0.8));
     if(!fieldRelative){
     xSpeed *= -1;
     ySpeed *= -1;
     rot *= 1;
     }
-    if(!slow) {
-      xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-      ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-      rot *= DriveConstants.kMaxAngularSpeed;
-    }
+    // if(!slow) {
+    //   xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    //   ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    //   rot *= DriveConstants.kMaxAngularSpeed;
+    // }
     SmartDashboard.putNumber("gyroangle", m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
+    SmartDashboard.putNumber("PitchAngle", m_gyro.getPitch());
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0)))
@@ -186,5 +187,19 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public void balance() {
+    double XAxisRate = Math.sin(Math.toRadians(m_gyro.getPitch())) * 1.5;
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        true
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(XAxisRate, 0, 0, Rotation2d.fromDegrees(m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0)))
+            : new ChassisSpeeds(XAxisRate, 0, 0));
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 }

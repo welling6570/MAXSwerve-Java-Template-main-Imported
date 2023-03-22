@@ -170,26 +170,32 @@ public final class Constants {
     public static final double kAngleMinOutput = -1;
     public static final double kAngleMaxOutput = 1;
 
-    public static final int stowReach = 50;
-    public static final int stowLift = 0;
-    public static final int lowReach = 50;
-    public static final int lowLift = 25;
-    public static final int midReach = 50;
-    public static final int midLift = 60;
-    public static final int highReach = 50;
-    public static final int highLift = 30;
-    public static final int shelfReach = 50;
-    public static final int shelfift = 90;
-    public static final int shelfupReach = 50;
-    public static final int shelfupift = 40;
+    public static final int JeremyRennerforwardThreshold = -1000;
+    public static final int JeremyRennerreverseThreshold = -195000;
+    public static final int JeremyRennerSafeThreshold = -60000;
+    public static final int JeremyRennercontrolLoopforwardThreshold = 50;
 
-    public static final int JeremyRennerforwardThreshold = 20000;
-    public static final int JeremyRennerreverseThreshold = -165000;
-    public static final int extensionMotorforwardThreshhold = 75;
-    public static final int extensionMotorreverseThreshhold = 50;
+    public static final int extensionMotorforwardThreshhold = 3;
+    public static final int extensionMotorreverseThreshhold = -96;
+    public static final int extensionMotorSafeThreshold = 3;
     public static final int extensioncontrolLoopforwardThreshold = 50;
-    public static final int JermeyRennercontrolLoopforwardThreshold = 50;
 
+    public static final int JeremyRennerA = -48000;
+    public static final int JeremyRennerB = -178000;
+    public static final int JeremyRennerX = -180000;
+    public static final int JeremyRennerY = -191500;
+    public static final int extensionMotorA = -30;
+    public static final int extensionMotorB = -35;
+    public static final int extensionMotorX = -60;
+    public static final int extensionMotorY = -96;
+    public static final int JeremyRennerStow = -1000;
+    public static final int extensionMotorStow = 1;
+    public static final int JeremyRennerAuto = -190000;
+    public static final int releaseHook = 2;
+    public static final double autonomousTimeOut = 0.5;
 
+    public static final int getReachCondition = -92;
+    public static final int reachReturnedCondition = -48;
+    public static final int getLiftCondition = -130000;
   }
 }

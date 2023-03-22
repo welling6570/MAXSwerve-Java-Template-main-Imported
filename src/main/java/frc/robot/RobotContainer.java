@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -60,8 +61,10 @@ public class RobotContainer {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
   
-  private SwerveControllerCommand midSwerveControllerCommand;
+  private SwerveControllerCommand bluemidSwerveControllerCommand;
+  private SwerveControllerCommand redmidSwerveControllerCommand;
   private SwerveControllerCommand shortSwerveControllerCommand;
+  private SwerveControllerCommand noArmSwerveControllerCommand;
   private SwerveControllerCommand longSwerveControllerCommand;
   private SwerveControllerCommand gigaMidSwerveControllerCommand;
  
@@ -72,32 +75,46 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
-    fisheye.setResolution(160, 120);
-    fisheye.setFPS(15);
-    m_chooser.setDefaultOption("mid auto", m_midengage);
+    // UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
+    // fisheye.setResolution(160, 120);
+    // fisheye.setFPS(15);
+   // m_chooser.setDefaultOption("mid auto", m_midengage);
     Trajectories.generateTrajectories();
     generateSwerveCommands();
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
-    m_chooser.addOption("mid", 
-    new RunCommand(() -> m_arm.Angxtend(0,-190000)).until(m_arm::getLift) 
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-111,-190000)).until(m_arm::getReach))
-    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(0.5)
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-10,-190000)).until(m_arm::reachReturned))
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-1,-1000))
-      .alongWith(midSwerveControllerCommand
-    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))))
+    m_chooser.setDefaultOption("blue mid", 
+    new RunCommand(() -> m_arm.Angxtend(ArmConstants.releaseHook,ArmConstants.JeremyRennerAuto)).until(m_arm::getLift) 
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorY,ArmConstants.JeremyRennerAuto)).until(m_arm::getReach))
+    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(ArmConstants.autonomousTimeOut)
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerAuto)).until(m_arm::reachReturned))
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow))
+      .alongWith(bluemidSwerveControllerCommand
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, 0)))))
     );
     m_chooser.addOption("sides", 
-    new RunCommand(() -> m_arm.Angxtend(0,-190000)).until(m_arm::getLift) 
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-111,-190000)).until(m_arm::getReach))
-    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(0.5)
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-10,-190000)).until(m_arm::reachReturned))
-    .andThen(new RunCommand(() -> m_arm.Angxtend(-1,-1000))
+    new RunCommand(() -> m_arm.Angxtend(ArmConstants.releaseHook,ArmConstants.JeremyRennerAuto)).until(m_arm::getLift) 
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorY,ArmConstants.JeremyRennerAuto)).until(m_arm::getReach))
+    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(ArmConstants.autonomousTimeOut)
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerAuto)).until(m_arm::reachReturned))
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow))
       .alongWith(shortSwerveControllerCommand
-    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))))
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, 0)))))
     );
+    m_chooser.addOption("red mid", 
+    new RunCommand(() -> m_arm.Angxtend(ArmConstants.releaseHook,ArmConstants.JeremyRennerAuto)).until(m_arm::getLift) 
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorY,ArmConstants.JeremyRennerAuto)).until(m_arm::getReach))
+    .andThen(new RunCommand(() -> m_intake.jeremyRennerHug()).withTimeout(ArmConstants.autonomousTimeOut)
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerAuto)).until(m_arm::reachReturned))
+    .andThen(new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow))
+      .alongWith(redmidSwerveControllerCommand
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false, 0)))))
+    );
+
+    m_chooser.addOption("no arm", 
+      new RunCommand(() -> noArmSwerveControllerCommand
+      .andThen(() -> m_robotDrive.drive(0, 0, 0, false, 0))));
+
     //m_chooser.addOption("short auto", m_shortking);
     //private final List<Trajectory.State> robotPositionList = Trajectories.midTrajectory.getStates();
     
@@ -115,7 +132,7 @@ public class RobotContainer {
                 //MathUtil.applyDeadband(-m_driverController.getRightX() * Math.abs(m_driverController.getRightX()), 0.06),
                 -m_rotLimiter.calculate(MathUtil.applyDeadband(Math.pow(m_driverController.getRightX(),3), 0.02)),
                 (m_driverController.getLeftBumper() ? false : true),
-                (m_driverController.getRightBumper())),
+                (m_driverController.getRightTriggerAxis())),
             m_robotDrive));
     m_intake.setDefaultCommand(
        new RunCommand(
@@ -127,9 +144,6 @@ public class RobotContainer {
     ));
   }
 
-  private final SequentialCommandGroup m_midengage = new SequentialCommandGroup(
-
-  );
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -146,16 +160,31 @@ public class RobotContainer {
             m_robotDrive));
     // new JoystickButton(XBShooter, Button.kA.value).onTrue( new RunCommand(() -> m_arm.Angxtend(50,0)));
     // new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
-    new JoystickButton(XBShooter, Button.kA.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-32, -48000)));
-    new JoystickButton(XBShooter, Button.kA.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
-    new JoystickButton(XBShooter, Button.kX.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-62,-180000)));
-    new JoystickButton(XBShooter, Button.kX.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
-    new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-111,-190000)));
-    new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
-    new JoystickButton(XBShooter, Button.kB.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(-20,-179000)));
-    new JoystickButton(XBShooter, Button.kB.value).onFalse( new RunCommand(() -> m_arm.Angxtend(-1,-1000)));
+    new JoystickButton(XBShooter, Button.kA.value)
+      .whileTrue( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorA, ArmConstants.JeremyRennerA)));
+    new JoystickButton(XBShooter, Button.kA.value)
+      .onFalse( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow)));
+    
+    new JoystickButton(XBShooter, Button.kX.value)
+      .whileTrue( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorX,ArmConstants.JeremyRennerX)));
+    new JoystickButton(XBShooter, Button.kX.value)
+      .onFalse( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow)));
+    
+    new JoystickButton(XBShooter, Button.kY.value)
+      .whileTrue( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorY,ArmConstants.JeremyRennerY)));
+    new JoystickButton(XBShooter, Button.kY.value)
+      .onFalse( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow)));
+    
+    new JoystickButton(XBShooter, Button.kB.value)
+      .whileTrue( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorB,ArmConstants.JeremyRennerB)));
+    //Shelf angle changed from -177000 to -178000 after replay of match 47
+    //Changed high angle from -191000 to -191500 
+    //179 -> 174 practice field b4 64xs
+    //174 -> 175 practice field b4 64
+    new JoystickButton(XBShooter, Button.kB.value)
+      .onFalse( new RunCommand(() -> m_arm.Angxtend(ArmConstants.extensionMotorStow,ArmConstants.JeremyRennerStow)));
     // new JoystickButton(XBShooter, Button.kY.value).whileTrue( new RunCommand(() -> m_arm.Angxtend(75,01)));
-    // new JoystickButton(XBShooter, Button.kY.value).onFalse( new RunCommand(() -> m_arm.Angxtend(50,0)));
+    
     new JoystickButton(XBShooter, Button.kLeftBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerHug()));
     new JoystickButton(XBShooter, Button.kRightBumper.value).whileTrue( new RunCommand(() -> m_intake.jeremyRennerRelease()));
     new JoystickButton(XBShooter, Button.kLeftStick.value).whileTrue(new RunCommand(() -> m_arm.AlterLift()));
@@ -180,8 +209,9 @@ public class RobotContainer {
     //       .alongWith(midSwerveControllerCommand
     //     .andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)))));
     return m_chooser.getSelected();
-    //midSwerveControllerCommand.andThen(
-       //() -> m_robotDrive.drive(0, 0, 0, false, false));
+    //removed chooser for armless m37
+    //return redmidSwerveControllerCommand
+    //  .andThen(new RunCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)));
   }
 
   private void generateSwerveCommands() {
@@ -189,8 +219,20 @@ public class RobotContainer {
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);    
     
-    midSwerveControllerCommand = new SwerveControllerCommand(
-        Trajectories.midTrajectory,
+    bluemidSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.bluemidTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
+    redmidSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.redmidTrajectory,
         m_robotDrive::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 
@@ -202,7 +244,7 @@ public class RobotContainer {
         m_robotDrive);
 
     shortSwerveControllerCommand = new SwerveControllerCommand(
-        Trajectories.shortTrajectory,
+        Trajectories.shortTrajectory, //changed from short to redmid after m37
         m_robotDrive::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 
@@ -211,7 +253,19 @@ public class RobotContainer {
         new PIDController(AutoConstants.kPYController, 0, 0),
         thetaController,
         m_robotDrive::setModuleStates,
-        m_robotDrive);    
+        m_robotDrive);  
+        
+    noArmSwerveControllerCommand = new SwerveControllerCommand(
+        Trajectories.shortTrajectory, //changed from short to redmid after m37
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);     
             
     longSwerveControllerCommand = new SwerveControllerCommand(
         Trajectories.longTrajectory,

@@ -50,8 +50,8 @@ public ArmSubsystem() {
     //m_alternateEncoder = extensionMotor.getAlternateEncoder(kAltEncType, kCPR); 
     JeremyRenner.configForwardSoftLimitEnable(true);
     JeremyRenner.configReverseSoftLimitEnable(true);
-    JeremyRenner.configForwardSoftLimitThreshold(-1000);
-    JeremyRenner.configReverseSoftLimitThreshold(-192000);
+    JeremyRenner.configForwardSoftLimitThreshold(ArmConstants.JeremyRennerforwardThreshold);
+    JeremyRenner.configReverseSoftLimitThreshold(ArmConstants.JeremyRennerreverseThreshold);
     JeremyRenner.configPeakOutputForward(0.4);
     JeremyRenner.configPeakOutputReverse(-0.4);
     JeremyRenner.config_kP(0, 1.0);
@@ -59,22 +59,26 @@ public ArmSubsystem() {
     JeremyRenner.config_kD(0, 0.0);
     JeremyRenner.configAllowableClosedloopError(0, 500);
     //This here sets a motion profile so that our arm wobbles less.
-    JeremyRenner.configMotionAcceleration(30000);
+   
+   
+    JeremyRenner.configMotionAcceleration(40000);
+    //changed sensorUnitsPer100msPerSec from 30000 to 40000 after match 31
     JeremyRenner.configMotionCruiseVelocity(60000);
 
+       
     m_extensionEncoder = extensionSparkMax.getEncoder();
     m_extensionEncoder.setPositionConversionFactor(1);
     //m_extensionEncoder = extensionSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
     
     extensionSparkMax.enableSoftLimit(SoftLimitDirection.kForward, true);
     extensionSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    extensionSparkMax.setSoftLimit(SoftLimitDirection.kForward, -2);
-    extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, -111);
+    extensionSparkMax.setSoftLimit(SoftLimitDirection.kForward, ArmConstants.extensionMotorforwardThreshhold);
+    extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.extensionMotorreverseThreshhold);
     //m_extensionEncoder.setPosition(50);
     //m_extensionEncoder.setInverted(true);
     
     m_extensionPidController = extensionSparkMax.getPIDController();    
-    m_extensionPidController.setOutputRange(-0.4, 0.4);
+    m_extensionPidController.setOutputRange(-0.5, 0.5);
     m_extensionPidController.setFeedbackDevice(m_extensionEncoder);   
     //m_extensionPidController.
     // set PID coefficients
@@ -103,21 +107,20 @@ public ArmSubsystem() {
     public void getPositions() {
         SmartDashboard.putNumber("Extension", m_extensionEncoder.getPosition());
         SmartDashboard.putNumber("Angle", JeremyRenner.getSelectedSensorPosition());
-        if (JeremyRenner.getSelectedSensorPosition()>-40000) {
-            extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, -1);
+        if (JeremyRenner.getSelectedSensorPosition()>-50000) {
+            extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.extensionMotorSafeThreshold);
         } else {
-            extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, -111);
+            extensionSparkMax.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.extensionMotorreverseThreshhold);
         }
-        if (m_extensionEncoder.getPosition()<-10) {
-            JeremyRenner.configForwardSoftLimitThreshold(-50000);
+        if (m_extensionEncoder.getPosition()<-60) {
+            JeremyRenner.configForwardSoftLimitThreshold(ArmConstants.JeremyRennerSafeThreshold);
         } else {
-            JeremyRenner.configForwardSoftLimitThreshold(-1000);
+            JeremyRenner.configForwardSoftLimitThreshold(ArmConstants.JeremyRennerforwardThreshold);
          }
     }
 
-
     public void Angxtend(double reach, double lift){  
-        SmartDashboard.putNumber("Angle: ", JeremyRenner.getSelectedSensorPosition());
+        //SmartDashboard.putNumber("Angle: ", JeremyRenner.getSelectedSensorPosition());
         JeremyRenner.set(TalonFXControlMode.MotionMagic, lift);
         m_extensionPidController.setReference(reach,  CANSparkMax.ControlType.kPosition);
     }
@@ -127,22 +130,22 @@ public ArmSubsystem() {
     }
 
     public boolean getReach(){
-        if (m_extensionEncoder.getPosition()<=-107) {
+        if (m_extensionEncoder.getPosition() <= ArmConstants.getReachCondition) {
             return true;
         } else {
             return false;
         }
     }
     public boolean reachReturned(){
-        if (m_extensionEncoder.getPosition()>=-50) {
+        if (m_extensionEncoder.getPosition() >= ArmConstants.reachReturnedCondition) {
             return true;
         } else {
             return false;
         }
     }
     public boolean getLift(){
-        if (JeremyRenner.getSelectedSensorPosition()<=-120000) {
+        if (JeremyRenner.getSelectedSensorPosition() <= ArmConstants.getLiftCondition) {
             return true; } else {return false;}
-        
+        //changed getSelectedSensorPostition from <=-120000 to -130000 after match 31
     }
 }
